@@ -11,6 +11,10 @@
 #include <random>
 #include <unistd.h>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 struct ColorRGB {
 	int r, g, b;
 };
@@ -25,6 +29,7 @@ const ColorRGB LIGHT_SKY_BLUE = {162, 210, 255};
 
 void moveCursor(int x, int y);
 void clearScreen();
+void setupConsole();
 void changeColor(int colorType, int r, int g, int b);
 void changeColor(int colorType, const ColorRGB &color);
 void changeColor(int colorType);
@@ -43,7 +48,8 @@ int main(){
 	
 	std::vector<std::pair<std::string, std::string>> kanaDictionary;
 	std::ifstream inputFile;
-	
+
+	setupConsole();
 	clearScreen();
 
 	loadFile("./assets/hiragana.kana", inputFile);
@@ -196,4 +202,11 @@ void checkInput(std::vector<std::pair<std::string, std::string>> kanaDictionary,
 		correctAnswers++;
 		kanaIndex++;
 	}
+}
+
+void setupConsole(){
+	#ifdef _WIN32
+        SetConsoleOutputCP(65001);
+        SetConsoleCP(65001);
+    #endif	
 }
